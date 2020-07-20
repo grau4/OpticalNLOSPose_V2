@@ -52,24 +52,24 @@ function data_augmentation_batch(cfg_name, depth_median)
     
     %% Name rule ----------------------------------------------------------
     param.cfg_name = cfg_name;
-    param.srcdir_name = sprintf('~/datasets/depth/%s', param.cfg_name);
+    param.srcdir_name = sprintf('datasets/depth/%s', param.cfg_name);
     param.sequence_name = return_sequence_name(param.cfg_name, param);
 
     
     %% Make dst folder ----------------------------------------------------
     if strcmp(param.cfg_name, 'stanford') == true
-        param.dstdir_name = '~/datasets/transient/stanford_32_30fps';
+        param.dstdir_name = 'datasets/transient/stanford_32_30fps';
         param.transient_dstdir_name = param.dstdir_name;
     else 
-        param.transient_dstdir_name = sprintf('~/datasets/transient/%s', param.sequence_name);
+        param.transient_dstdir_name = sprintf('datasets/transient/%s', param.sequence_name);
     end
     if ~exist(param.transient_dstdir_name, 'dir'); mkdir(param.transient_dstdir_name); end
 
     
     %% Frame range --------------------------------------------------------
     if strcmp(param.cfg_name, '0517_take_01') == true
-       param.framerange_30fps = [1000, 1200]; % for demo (200 frames only)
-       % param.framerange_30fps = [265+169-1,  265+2062+1]; % uncomment this for whole sequence
+       %param.framerange_30fps = [1000, 1200]; % for demo (200 frames only)
+       param.framerange_30fps = [265+169-1,  265+2062+1]; % uncomment this for whole sequence
     elseif strcmp(param.cfg_name, '0517_take_02') == true
         param.framerange_30fps = [132+156-1, 132+2767+1];
     elseif strcmp(param.cfg_name, '0517_take_03') == true
@@ -160,28 +160,31 @@ function data_augmentation_batch(cfg_name, depth_median)
     if strcmp(param.cfg_name, '0702_take_01') == true
         % 0702_take_01_1 -----
         tmp_sequence_name_1 = return_sequence_name('0702_take_01_1', param);
-        tmp_dstdir_name_1 = sprintf('~/datasets/transient/%s', tmp_sequence_name_1);
+        tmp_dstdir_name_1 = sprintf('datasets/transient/%s', tmp_sequence_name_1);
         if ~exist(tmp_dstdir_name_1, 'dir'); mkdir(tmp_dstdir_name_1); end
         % 0702_take_01_2 -----
         tmp_sequence_name_2 = return_sequence_name('0702_take_01_2', param);
-        tmp_dstdir_name_2 = sprintf('~/datasets/transient/%s', tmp_sequence_name_2);
+        tmp_dstdir_name_2 = sprintf('datasets/transient/%s', tmp_sequence_name_2);
         if ~exist(tmp_dstdir_name_2, 'dir'); mkdir(tmp_dstdir_name_2); end
         % Copy -----
         for imageID = 240 : 2506
             src_name = sprintf('%s/%08d.npy', param.transient_dstdir_name, imageID);
             dst_name = sprintf('%s/%08d.npy', tmp_dstdir_name_1, imageID);
-            command = sprintf('cp %s %s', src_name, dst_name);
+            %command = sprintf('cp %s %s', src_name, dst_name);
+            command = sprintf('copy %s %s', src_name, dst_name);
             dos(command);
         end
         for imageID = 2757 : 4005
             src_name = sprintf('%s/%08d.npy', param.transient_dstdir_name, imageID);
             dst_name = sprintf('%s/%08d.npy', tmp_dstdir_name_2, imageID);
-            command = sprintf('cp %s %s', src_name, dst_name);
+            %command = sprintf('cp %s %s', src_name, dst_name);
+            command = sprintf('copy %s %s', src_name, dst_name);
             dos(command);
         end
 
         % Delete -----
-        command = sprintf('rm -r %s', param.transient_dstdir_name);
+        %command = sprintf('rm -r %s', param.transient_dstdir_name);
+        command = sprintf('del %s', param.transient_dstdir_name);
         dos(command);
     end
 end

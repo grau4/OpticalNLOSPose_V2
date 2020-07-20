@@ -160,14 +160,21 @@ function data_augmentation(param)
 
         dst_transient_image_name_mat = sprintf('%s/%08d.mat', param.transient_dstdir_name, imageID);
         dst_transient_image_name_npy = sprintf('%s/%08d.npy', param.transient_dstdir_name, imageID);
-        command = sprintf('~/anaconda3/bin/python utils/mat_to_numpy.py --mat_name %s --npy_name %s --matrix_size 32 --enable_scale1 --dstdir %s --start_ind %d --end_ind %d', ...
+        %command = sprintf('~/anaconda3/bin/python utils/mat_to_numpy.py --mat_name %s --npy_name %s --matrix_size 32 --enable_scale1 --dstdir %s --start_ind %d --end_ind %d', ...
+        %                    dst_transient_image_name_mat, dst_transient_image_name_npy, param.transient_dstdir_name, start_ind, end_ind);
+        command = sprintf('python utils/mat_to_numpy.py --mat_name %s --npy_name %s --matrix_size 32 --enable_scale1 --dstdir %s --start_ind %d --end_ind %d', ...
                             dst_transient_image_name_mat, dst_transient_image_name_npy, param.transient_dstdir_name, start_ind, end_ind);
+
         dos(command);
     end
     
     for imageID = param.framerange_30fps(1) : param.framerange_30fps(2)
         dst_transient_image_name_mat = sprintf('%s/%08d.mat', param.transient_dstdir_name, imageID);
-        command = sprintf('rm %s', dst_transient_image_name_mat);
+        %command = sprintf('rm %s', dst_transient_image_name_mat);
+        
+        split_path = split(dst_transient_image_name_mat, '/');
+        new_path = [char(split_path(1)) filesep char(split_path(2)) filesep char(split_path(3)) filesep char(split_path(4))];
+        command = sprintf('del %s', new_path);
         dos(command);
     end
  
